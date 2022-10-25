@@ -11,21 +11,21 @@ typedef struct tlditerator TLDIterator;
  * tldlist_create generates a list structure for storing counts against
  * top level domains (TLDs)
  *
- * creates a TLDList that is constrained to the 'begin' and 'end' Dates.
+ * creates a TLDList that is constrained to the `begin' and `end' Date's
  * returns a pointer to the list if successful, NULL if not
  */
 TLDList *tldlist_create(Date *begin, Date *end);
 
 /*
- * tldlist_destroy destroys the list structure in 'tld'
+ * tldlist_destroy destroys the list structure in `tld'
  *
- * all heap allocated storage associated with the list is returned to the heap.
+ * all heap allocated storage associated with the list is returned to the heap
  */
 void tldlist_destroy(TLDList *tld);
 
 /*
- * tldlist_add adds the TLD contained in 'hostname' to the tldlist if
- * 'd' falls in the begin and end dates associated with the list;
+ * tldlist_add adds the TLD contained in `hostname' to the tldlist if
+ * `d' falls in the begin and end dates associated with the list;
  * returns 1 if the entry was counted, 0 if not
  */
 int tldlist_add(TLDList *tld, char *hostname, Date *d);
@@ -38,10 +38,8 @@ long tldlist_count(TLDList *tld);
 
 /*
  * tldlist_iter_create creates an iterator over the TLDList; returns a pointer
- * to the iterator if successful, NULL if not.
- *
+ * to the iterator if successful, NULL if not
  */
-//! what is an iterator?
 TLDIterator *tldlist_iter_create(TLDList *tld);
 
 /*
