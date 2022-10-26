@@ -79,6 +79,19 @@ void tldlist_destroy(TLDList *tld) {
     //! possible memory leak
 }
 
+// return the top level domain name of the hostname
+char *find_tld(char *hostname) {
+    char *tld = hostname;
+    char *temp = hostname;
+    while (*temp != '\0') {
+        if (*temp == '.') {
+            tld = temp + 1;
+        }
+        temp++;
+    }
+    return tld;
+}
+
 // don't need the date as an argument as it was already checked in tldlist_add():
 // return 0 on failure, 1 on success
 int tldlist_addbynode(TLDNode *root, char *hostname) {
@@ -109,7 +122,7 @@ int tldlist_addbynode(TLDNode *root, char *hostname) {
         // if root is null, make it:
     } else if ((root = (TLDNode *)malloc(sizeof(TLDNode))) != NULL) {
         root->hostname = hostname;
-        root->count = 1; // first node
+        root->count = 1; // first node added
         root->left = NULL;
         root->right = NULL;
         root->parent = NULL;
@@ -130,6 +143,10 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
     for (int i = 0; i < strlen(hostname); i++) {
         hostname[i] = tolower(hostname[i]);
     }
+
+    printf("old hostname: %s", hostname);
+    hostname = find_tld(hostname);
+    printf("new hostname: %s", hostname);
 
     int add_status = tldlist_addbynode(tld->root, hostname);
 
@@ -178,18 +195,33 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 
 // find the next logical successor from current node:
 // return iter with next node, or NULL if there is no next node:
+// Post order = > Left, Right, Root
 TLDNode *tldlist_iter_next(TLDIterator *iter) {
-    //! Post order = > Left, Right, Root
 
     if (iter == NULL || iter->current_node == NULL) {
         return NULL;
     }
 
     // find parent
-    // if this node is its left child, check if right child exist
-    // if yes, go there
-    // if no, stay on parent node
-    // if this node is its right child, go to parent
+    if (iter->current_node->parent != NULL) {
+        // if this node is its left child, check if right child exist
+        if (iter->current_node == iter->current_node->parent->left) {
+            // if yes, go there
+            iter->current_node = iter->current_node->parent;
+            // if right child exist, go there:
+            if (iter->current_node->right != NULL) {
+                iter->current_node = iter->current_node->right;
+            }
+
+            // if no, stay on parent node
+        } else if (iter->current_node == iter->current_node->parent->right) {
+            // if this node is its right child, go to parent
+            iter->current_node = iter->current_node->parent;
+        }
+
+        return iter->current_node;
+    }
+    return NULL;
 }
 //     int left_found = 0;
 //     int right_found = 0;
