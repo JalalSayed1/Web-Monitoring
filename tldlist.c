@@ -185,38 +185,44 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
         return NULL;
     }
 
-    int left_found = 0;
-    int right_found = 0;
-
-    // printPostorder(node->left);
-    while (iter->current_node->left != NULL) {
-        iter->current_node = iter->current_node->left;
-        left_found = 1;
-    }
-
-    // printPostorder(node->right);
-    while (iter->current_node->right != NULL) {
-        iter->current_node = iter->current_node->right;
-        right_found = 1;
-    }
-
-    // if left and right nodes are not found then check the parent:
-    // if parent is not null:
-    if (!left_found && !right_found && iter->current_node->parent != NULL) {
-        // if parent's left node is the current node:
-        if (iter->current_node->parent->left == iter->current_node) {
-            // if parent's right node is not null:
-            if (iter->current_node->parent->right != NULL) {
-                iter->current_node = iter->current_node->parent->right;
-                return iter->current_node;
-            }
-        }
-    } else
-        return NULL;
-
-    // printf("%d ", node->data);
-    return iter->current_node;
+    // find parent
+    // if this node is its left child, check if right child exist
+    // if yes, go there
+    // if no, stay on parent node
+    // if this node is its right child, go to parent
 }
+//     int left_found = 0;
+//     int right_found = 0;
+
+//     // printPostorder(node->left);
+//     while (iter->current_node->left != NULL) {
+//         iter->current_node = iter->current_node->left;
+//         left_found = 1;
+//     }
+
+//     // printPostorder(node->right);
+//     while (iter->current_node->right != NULL) {
+//         iter->current_node = iter->current_node->right;
+//         right_found = 1;
+//     }
+
+//     // if left and right nodes are not found then check the parent:
+//     // if parent is not null:
+//     if (!left_found && !right_found && iter->current_node->parent != NULL) {
+//         // if parent's left node is the current node:
+//         if (iter->current_node->parent->left == iter->current_node) {
+//             // if parent's right node is not null:
+//             if (iter->current_node->parent->right != NULL) {
+//                 iter->current_node = iter->current_node->parent->right;
+//                 return iter->current_node;
+//             }
+//         }
+//     } else
+//         return NULL;
+
+//     // printf("%d ", node->data);
+//     return iter->current_node;
+// }
 
 // if there is a left node:
 //  if (iter->current_node->left != NULL) {
