@@ -1,10 +1,10 @@
-.txt
+#.txt
 
 # Prerequisites
 *.d
 
 # Object files
-*.o
+#*.o
 *.ko
 *.obj
 *.elf
