@@ -114,8 +114,12 @@ int date_compare(Date *date1, Date *date2) {
 }
 
 void date_destroy(Date *d) {
+    printf("date_destroy called with pointer %p\n", d);
     if (d != NULL) {
+        printf("freeing pointer %p\n", d);
         free(d);
         d = NULL;
+    } else{
+        printf("pointer is NULL and didn't free it\n");
     }
 }

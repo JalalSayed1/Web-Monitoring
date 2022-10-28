@@ -7,7 +7,10 @@ void test_tldlist_create() {
     Date *d1 = date_create("20/12/2018");
     Date *d2 = date_create("15/10/2019");
     TLDList *tldlist = tldlist_create(d1, d2);
-    printf("TLDList created:\n      begin date: %d/%d/%d\n      end date: %d/%d/%d", tldlist->begin->day, tldlist->begin->month, tldlist->begin->year, tldlist->end->day, tldlist->end->month, tldlist->end->year);
+
+    printf("TLDList created:\n");
+    printf("\tbegin date: %d/%d/%d\t\t%s\n", tldlist->begin->day, tldlist->begin->month, tldlist->begin->year, (tldlist->begin->day == 20 && tldlist->begin->month == 12 && tldlist->begin->year == 2018) ? "PASS" : "FAIL");
+    printf("\tend date: %d/%d/%d\t\t%s\n", tldlist->end->day, tldlist->end->month, tldlist->end->year, (tldlist->end->day == 15 && tldlist->end->month == 10 && tldlist->end->year == 2019) ? "PASS" : "FAIL");
 }
 
 void test_tldlist_add() {
@@ -21,12 +24,19 @@ void test_tldlist_add() {
     Date *d5 = date_create("19/12/2018");
     Date *d6 = date_create("16/10/2019");
     // add to tldlist random tlds:
-    tldlist_add(tldlist, "com", d3);
-    tldlist_add(tldlist, "net", d4);
-    tldlist_add(tldlist, "com", d5);
-    tldlist_add(tldlist, "edu", d6);
+    tldlist_add(tldlist, "gla.COM", d3);
+    tldlist_add(tldlist, "gla.ac.net", d4);
+    tldlist_add(tldlist, "gla.uk.com", d5);
+    tldlist_add(tldlist, "gla.edu", d6);
 
-    printf("tldlist root (com): %s with count (2): %d\n", tldlist->root->hostname, tldlist->root->count);
-    printf("tldlist root->left (edu): %s with count (1): %d\n", tldlist->root->left->hostname, tldlist->root->left->count);
-    printf("tldlist root->right (net): %s with count (1): %d\n", tldlist->root->right->hostname, tldlist->root->right->count);
+    printf("tldlist root: %s with count: %d\t\t%s\n", tldlist->root->hostname, tldlist->root->count, (strcmp(tldlist->root->hostname, "com") == 0 && tldlist->root->count == 2) ? "PASS" : "FAIL");
+    printf("tldlist root->left: %s with count: %d\t\t%s\n", tldlist->root->left->hostname, tldlist->root->left->count, (strcmp(tldlist->root->left->hostname, "edu") == 0 && tldlist->root->left->count == 1) ? "PASS" : "FAIL");
+    printf("tldlist root->right: %s with count: %d\t\t%s\n", tldlist->root->right->hostname, tldlist->root->right->count, (strcmp(tldlist->root->right->hostname, "net") == 0 && tldlist->root->right->count == 1) ? "PASS" : "FAIL");
+}
+
+int main(int argc, char const *argv[]) {
+    test_tldlist_create();
+    test_tldlist_add();
+
+    return 0;
 }
