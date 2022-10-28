@@ -347,8 +347,8 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
 void tldlist_iter_destroy(TLDIterator *iter) {
     free(iter->current_node);
     iter->current_node = NULL;
-    free(iter);
-    iter = NULL;
+    // free(iter);
+    // iter = NULL;
 }
 
 char *tldnode_tldname(TLDNode *node) {
