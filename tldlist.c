@@ -347,8 +347,8 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
 void tldlist_iter_destroy(TLDIterator *iter) {
     free(iter->current_node);
     iter->current_node = NULL;
-    // free(iter);
-    // iter = NULL;
+    free(iter);
+    iter = NULL;
 }
 
 char *tldnode_tldname(TLDNode *node) {
@@ -524,7 +524,7 @@ void test_find_ltd() {
     printf("tld: %s\t\t\t\t\t\t%s\n", tld, (compare == 0) ? "PASS" : "FAIL");
 }
 
-void test_iter_destroy(){
+void test_iter_destroy() {
     TLDList *list = make_list();
     add_random_nodes(list);
 
@@ -537,24 +537,22 @@ void test_iter_destroy(){
 
     printf("iter after destroy: %p\t\t\t\t%s\n", iter, (iter == NULL) ? "PASS" : "FAIL");
     printf("current_node after destroy: %p\t\t\t%s\n", current_node, (current_node == NULL) ? "PASS" : "FAIL");
-
 }
 
-    int
-    main(int argc, char const *argv[]) {
-    test_tldlist_create();
+// int main(int argc, char const *argv[]) {
+//     test_tldlist_create();
 
-    test_tldlist_add();
+//     test_tldlist_add();
 
-    test_iter_create();
+//     test_iter_create();
 
-    test_iter_next();
+//     test_iter_next();
 
-    test_tldlist_destroy_one_node();
+//     test_tldlist_destroy_one_node();
 
-    test_find_ltd();
+//     test_find_ltd();
 
-    test_iter_destroy();
+//     test_iter_destroy();
 
-    return 0;
-}
+//     return 0;
+// }
