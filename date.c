@@ -45,38 +45,6 @@ Date *date_create(char *datestr) {
     return NULL;
 }
 
-// char *sep = "/";
-// char *p = strtok(datestr, sep);
-// char *temp = p;
-// while (p != NULL) {
-//     temp = p;
-//     p = strtok(NULL, sep);
-// }
-
-// char *token = strtok(datestr, "/");
-// int counter = 0;
-// while (token != NULL) {
-//     printf(" %s\n", token);
-
-//     if (counter == 0) {
-//         d->day = atoi(token);
-//     } else if (counter == 1) {
-//         d->month = atoi(token);
-//     } else if (counter == 2) {
-//         d->year = atoi(token);
-//     }
-
-//     token = strtok(NULL, "/");
-// }
-
-// d->day = datestr[0];
-// d->month = datestr[1];
-// d->year = datestr[2];
-//     return d;
-// }
-// return NULL;
-// }
-
 Date *date_duplicate(Date *d) {
     Date *new;
 

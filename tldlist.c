@@ -17,8 +17,6 @@ struct tldnode {
     struct tldnode *left;
     struct tldnode *right;
     struct tldnode *parent;
-    // root points to parent node, date begins with the earliest date and end with the latest date:
-    // struct tldlist *list;
 };
 
 /**
@@ -27,7 +25,6 @@ struct tldnode {
 struct tlditerator {
     // make an array of pointer pointing to all the nodes inorder and store the index here.
     struct tldnode *current_node;
-    // struct tldlist *list;
 };
 
 TLDList *tldlist_create(Date *begin, Date *end) {
@@ -74,8 +71,8 @@ void tldlist_destroy(TLDList *tld) {
             temp_iter->current_node = tldlist_iter_next(temp_iter);
         }
 
-        // tldlist_iter_destroy(iter);
-        // tldlist_iter_destroy(temp_iter);
+        tldlist_iter_destroy(iter);
+        tldlist_iter_destroy(temp_iter);
         date_destroy(tld->begin);
         date_destroy(tld->end);
         free(tld);
@@ -85,60 +82,6 @@ void tldlist_destroy(TLDList *tld) {
         tld = NULL;
     }
 }
-
-// return pointer to next node (post order traversal) or NULL if there is no next node:
-// TLDNode *find_next_node(TLDNode *current_node) {
-//     if (current_node->parent == NULL){
-//         return NULL;
-//     }
-
-//     if (current_node->parent->left ==current_node){
-//         return find_next_node(current_node->parent->right);
-
-//     }
-//     while (current_node != NULL) {
-//         if (current_node->left != NULL) {
-//             current_node = current_node->left;
-//         } else if (current_node->right != NULL) {
-//             current_node = current_node->right;
-//         } else {
-//             return current_node;
-//         }
-//     }
-//     return NULL;
-// }
-
-// void tldlist_destroy(TLDList *tld) {
-//     if (tld == NULL) {
-//         return;
-//     }
-//     if (tld->root == NULL) {
-//         free(tld);
-//         tld = NULL;
-//         return;
-//     }
-
-//     TLDNode *current_node = tld->root;
-//     TLDNode *temp_node;
-
-//     while (current_node != NULL) {
-//         if (current_node->left != NULL) {
-//             current_node = current_node->left;
-//         } else if (current_node->right != NULL) {
-//             current_node = current_node->right;
-//         } else {
-//             temp_node = find_next_node(current_node);
-//             if (temp_node == NULL) {
-//                 free(current_node);
-//                 current_node = NULL;
-//                 free(tld);
-//                 tld = NULL;
-//                 return;
-//             }
-
-//         }
-//     }
-// }
 
 // return the top level domain name of the hostname
 // Works for gla.com => com
@@ -477,15 +420,6 @@ void test_iter_next() {
 
 // test tldlist_destroy:
 void test_tldlist_destroy_one_node() {
-    // TLDList *list = make_list();
-    // add_random_nodes(list);
-    // TLDNode *root = list->root;
-    // TLDNode *left = list->root->left;
-    // TLDNode *right = list->root->right;
-    // TLDNode *right_right = list->root->right->right;
-    // // left left should already be NULL:
-    // TLDNode *left_left = list->root->left->left;
-
     // make a list with 1 node only:
     Date *begin = date_create("01/01/2018");
     Date *end = date_create("01/01/2019");
@@ -504,14 +438,6 @@ void test_tldlist_destroy_one_node() {
     printf("list->root->parent: %p\t\t\t%s\n", list->root->parent, (list->root->parent == NULL) ? "PASS" : "FAIL");
     printf("list->root->left: %p\t\t\t%s\n", list->root->left, (list->root->left == NULL) ? "PASS" : "FAIL");
     printf("list->root->right: %p\t\t\t\t%s\n", list->root->right, (list->root->right == NULL) ? "PASS" : "FAIL");
-
-    // test if list and nodes are all NULL:
-    // printf("list after destroy: %p\t\t\t\t\t%s\n", list, (list == NULL) ? "PASS" : "FAIL");
-    // printf("root after destroy: %p\t\t\t\t\t%s\n", root, (root == NULL) ? "PASS" : "FAIL");
-    // printf("left after destroy: %p\t\t\t\t\t%s\n", left, (left == NULL) ? "PASS" : "FAIL");
-    // printf("right after destroy: %p\t\t\t\t\t%s\n", right, (right == NULL) ? "PASS" : "FAIL");
-    // printf("right_right after destroy: %p\t\t\t\t%s\n", right_right, (right_right == NULL) ? "PASS" : "FAIL");
-    // printf("left_left after destroy: %p\t\t\t\t%s\n", left_left, (left_left == NULL) ? "PASS" : "FAIL");
 }
 
 void test_find_ltd() {
