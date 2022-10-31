@@ -84,16 +84,12 @@ void tldlist_destroy(TLDList *tld) {
 // return the top level domain name of the hostname
 // Works for gla.com => com
 char *find_tld(char *hostname) {
-    // find the last dot in the hostname and return the substring after it
-    char *tld = hostname;
-    char *temp = hostname;
-    while (*temp != '\0') {
-        if (*temp == '.') {
-            tld = temp + 1;
-        }
-        temp++;
+    // find the last dot in the hostname and return the substring after it:
+    char *tld = strrchr(hostname, '.');
+    if (tld != NULL) {
+        return tld + 1;
     }
-    return tld;
+    return NULL;
 }
 
 int tldnode_create(char *hostname, TLDNode *parent) {
