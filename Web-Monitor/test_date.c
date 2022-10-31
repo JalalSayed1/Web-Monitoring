@@ -47,7 +47,6 @@ int main() {
     test_compare_equal();
     test_compare_greater();
     test_compare_less();
-    //! date_destroy does not free the memory:
     test_destroy();
     return 0;
 }

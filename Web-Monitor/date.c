@@ -15,7 +15,6 @@ Date *date_create(char *datestr) {
     struct date *d;
 
     if ((d = (struct date *)malloc(sizeof(struct date))) != NULL) {
-
         // first 2 chars of datestr are for int day:
         char day[3];
         day[0] = datestr[0];

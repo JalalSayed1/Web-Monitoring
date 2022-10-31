@@ -1,5 +1,4 @@
 #include "tldlist.h"
-// #include "date.c"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +38,6 @@ TLDList *tldlist_create(Date *begin, Date *end) {
     return NULL;
 }
 
-//! it's not freeing the memory in the list but freeing it from the iter?
 void tldlist_destroy(TLDList *tld) {
 
     if (tld != NULL || tld->root != NULL) {
@@ -86,6 +84,7 @@ void tldlist_destroy(TLDList *tld) {
 // return the top level domain name of the hostname
 // Works for gla.com => com
 char *find_tld(char *hostname) {
+    // find the last dot in the hostname and return the substring after it
     char *tld = hostname;
     char *temp = hostname;
     while (*temp != '\0') {
@@ -173,7 +172,6 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
 
     // hostname is case insensitive:
     // lowercase hostname and store it in a new variable which size is the same as the original:
-    //! how can I free this memory?
     char *lower_hostname = (char *)malloc(strlen(hostname) + 1);
     int i = 0;
     while (hostname[i] != '\0') {
@@ -211,9 +209,8 @@ long tldlist_count(TLDList *tld) {
 
     long count = 0;
 
-    if (tld == NULL || tld->root == NULL) {
+    if (tld == NULL || tld->root == NULL)
         return 0;
-    }
 
     TLDIterator *iter = tldlist_iter_create(tld);
     count += iter->current_node->count;
@@ -227,11 +224,9 @@ long tldlist_count(TLDList *tld) {
 
 TLDIterator *tldlist_iter_create(TLDList *tld) {
     TLDIterator *iter;
-    // TLDNode *node = tld->root;
 
     if ((iter = malloc(sizeof(TLDIterator))) != NULL) {
         iter->current_node = tld->root;
-        // node = tld->root;
 
         // Post order => Left, Right, Root
         // find the most left node:
@@ -254,9 +249,8 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 // Post order = > Left, Right, Root
 TLDNode *tldlist_iter_next(TLDIterator *iter) {
 
-    if (iter == NULL || iter->current_node == NULL) {
+    if (iter == NULL || iter->current_node == NULL)
         return NULL;
-    }
 
     // find parent
     if (iter->current_node->parent != NULL) {
