@@ -126,7 +126,7 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
 
     if (root != NULL) {
 
-        int compare_status = strcmp(hostname, tldnode_tldname(root));
+        int compare_status = strcmp(hostname, root->hostname);
 
         if (compare_status == 0) {
             // if this is the node we want:
