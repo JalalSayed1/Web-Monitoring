@@ -1,5 +1,5 @@
 tldmonitor: tldmonitor.o date.o tldlist.o
-	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -01 -g -o tldmonitor tldmonitor.o date.o tldlist.o
+	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o1 -g -o tldmonitor tldmonitor.o date.o tldlist.o
 
 date.o: date.h date.c
 	clang -Wall -Werror -o date.o -c date.c
