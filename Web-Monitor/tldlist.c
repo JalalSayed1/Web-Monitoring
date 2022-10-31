@@ -93,7 +93,7 @@ void tldlist_destroy(TLDList *tld) {
 }
 
 // return the top level domain name of the hostname
-// Works for gla.com => com
+// for gla.com => com
 char *find_tld(char *hostname) {
     // find the top level domain in the hostname:
     char *tld = hostname;
@@ -179,11 +179,12 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
         return 0;
     }
 
-    hostname = find_tld(hostname);
+    char *only_tld = find_tld(hostname);
 
+    char *lower_hostname = (char *)malloc(strlen(only_tld) + 1);
+    //! char lower_hostname[strlen(only_tld)];
     // hostname is case insensitive:
     // lowercase hostname and store it in a new variable which size is the same as the original:
-    char *lower_hostname = (char *)malloc(strlen(hostname) + 1);
     int i = 0;
     while (hostname[i] != '\0') {
         lower_hostname[i] = tolower(hostname[i]);
