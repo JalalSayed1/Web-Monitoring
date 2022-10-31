@@ -1,7 +1,7 @@
 #include "date.h"
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+// #include <string.h>
 
 // create the date struct:
 struct date {

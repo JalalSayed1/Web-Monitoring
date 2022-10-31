@@ -10,10 +10,11 @@ tldlist.o: tldlist.h tldlist.c
 tldmonitor.o: tldmonitor.c date.h tldlist.h
 	clang -Wall -Werror -o tldmonitor.o -c tldmonitor.c
 
-datetests: test_date.c date.c
+# for testing:
+datetests: test_date.c date.o tldlist.o
 	clang -Wall -Werror -g -o datetest.o test_date.c
 
-tldtests: tldlist.h tldlist.c
+tldtests: tldlist.o date.o test_tldlist.c
 	clang -Wall -Werror -g -o tldtest.o tldlist.c
 
 clean:
