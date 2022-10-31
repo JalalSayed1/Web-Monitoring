@@ -17,11 +17,11 @@ cktldmonitor: tldmonitor.o date.o tldlist.o
 dtldmonitor: tldmonitor.c date.c tldlist.c
 	clang -Wall -Werror -g -o dtldmonitor tldmonitor.c date.c tldlist.c
 
-datetests: test_date.c date.c tldlist.c
+datetests: test_date.c date.c
 	clang -Wall -Werror -g -o datetest.o test_date.c
 
 tldtests: test_tldlist.c tldlist.c date.c
-	clang -Wall -Werror -g -o tldtest.o tldlist.c
+	clang -Wall -Werror -g -o tldtest.o test_tldlist.c
 
 clean:
 	rm -f *.o tldmonitor

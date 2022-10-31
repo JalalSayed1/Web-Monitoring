@@ -7,7 +7,7 @@ TLDList *make_list() {
     Date *d1 = date_create("20/12/2018");
     Date *d2 = date_create("15/10/2019");
     TLDList *tldlist = tldlist_create(d1, d2);
-
+    
     return tldlist;
 }
 
