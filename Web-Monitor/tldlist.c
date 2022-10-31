@@ -40,7 +40,7 @@ TLDList *tldlist_create(Date *begin, Date *end) {
 
 void tldlist_destroy(TLDList *tld) {
 
-    if (tld != NULL || tld->root != NULL) {
+    if (tld != NULL && tld->root != NULL) {
 
         TLDIterator *iter = tldlist_iter_create(tld);
         TLDIterator *temp_iter = tldlist_iter_create(tld);
@@ -50,6 +50,7 @@ void tldlist_destroy(TLDList *tld) {
         while (iter->current_node != NULL) {
 
             // double check that left and right nodes are freed:
+            //! do I need this section?
             if (iter->current_node->left != NULL) {
                 free(iter->current_node->left);
                 iter->current_node->left = NULL;
@@ -58,23 +59,33 @@ void tldlist_destroy(TLDList *tld) {
                 free(iter->current_node->right);
                 iter->current_node->right = NULL;
             }
+
             // make parent node point to NULL children:
             iter->current_node->left = NULL;
             iter->current_node->right = NULL;
-
+            // free hotname:
+            free(iter->current_node->hostname);
+            iter->current_node->hostname = NULL;
+            // free node:
             free(iter->current_node);
             iter->current_node = NULL;
 
-            iter = temp_iter;
+            iter->current_node = temp_iter->current_node;
             temp_iter->current_node = tldlist_iter_next(temp_iter);
         }
 
-        tldlist_iter_destroy(iter);
-        tldlist_iter_destroy(temp_iter);
+        // free the dates of the tldlist:
         date_destroy(tld->begin);
         date_destroy(tld->end);
+
+        // free the iterators:
+        tldlist_iter_destroy(iter);
+        tldlist_iter_destroy(temp_iter);
+
+        // free the tldlist itself:
         free(tld);
         tld = NULL;
+
     } else if (tld != NULL) {
         free(tld);
         tld = NULL;
@@ -197,7 +208,8 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
             add_status = 1;
         }
     }
-
+    free(lower_hostname);
+    lower_hostname = NULL;
     return add_status;
 }
 
@@ -278,10 +290,15 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
 }
 
 void tldlist_iter_destroy(TLDIterator *iter) {
+    if (iter != NULL && iter->current_node != NULL) {
     free(iter->current_node);
     iter->current_node = NULL;
     free(iter);
     iter = NULL;
+    } else if (iter != NULL) {
+        free(iter);
+        iter = NULL;
+    }
 }
 
 char *tldnode_tldname(TLDNode *node) {
