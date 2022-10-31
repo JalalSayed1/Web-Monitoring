@@ -1,5 +1,5 @@
 tldmonitor: tldmonitor.o date.o tldlist.o
-	clang -Wall -Werror -g -o2 -o tldmonitor tldmonitor.o date.o tldlist.o
+	clang -Wall -Werror -o tldmonitor tldmonitor.o date.o tldlist.o
 
 date.o: date.h date.c
 	clang -Wall -Werror -o date.o -c date.c
