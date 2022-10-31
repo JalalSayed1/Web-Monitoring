@@ -1,9 +1,5 @@
-// #include "date.c"
+#include "date.c"
 #include "tldlist.c"
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 //------- tests:
 // makes a list in range "20/12/2018" - "15/10/2019"
