@@ -14,7 +14,7 @@ tldmonitor.o: tldmonitor.c date.h tldlist.h
 	clang -Wall -Werror -o tldmonitor.o -c tldmonitor.c
 
 # for testing:
-datetests: test_date.c date.o tldlist.o
+datetests: test_date.c date.c tldlist.c
 	clang -Wall -Werror -g -o datetest.o test_date.c
 
 tldtests: tldlist.o date.o test_tldlist.c
