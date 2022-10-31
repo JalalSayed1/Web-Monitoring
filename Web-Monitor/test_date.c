@@ -35,10 +35,8 @@ void test_compare_less() {
 
 void test_destroy() {
     Date *d = date_create("20/12/2018");
-    printf("d = %p\n", d);
     date_destroy(d);
-    printf("d = %p with value %d\n", d, d->day);
-    printf("Date %p 20/12/2018 destroyed\t\t%s\n",d, d == NULL ? "PASS" : "FAIL");
+    printf("Date %p 20/12/2018 destroyed\t\t%s\n",d, (d == NULL) ? "PASS" : "FAIL");
 }
 
 int main() {
