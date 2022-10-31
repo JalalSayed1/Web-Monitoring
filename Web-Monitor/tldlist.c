@@ -226,7 +226,7 @@ long tldlist_count(TLDList *tld) {
     while ((iter->current_node = tldlist_iter_next(iter)) != NULL) {
         count += iter->current_node->count;
     }
-
+    tldlist_iter_destroy(iter);
     return count;
 }
 
