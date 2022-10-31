@@ -12,10 +12,10 @@ tldmonitor.o: tldmonitor.c date.h tldlist.h
 
 # for testing:
 cktldmonitor: tldmonitor.o date.o tldlist.o
-	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o1 -g -o tldmonitor tldmonitor.o date.o tldlist.o
+	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o1 -g -o tldmonitor.o tldmonitor.o date.o tldlist.o
 
-dtldmonitor: tldmonitor.o date.o tldlist.o
-	clang -Wall -Werror -g -o tldmonitor tldmonitor.o date.o tldlist.o
+dtldmonitor: tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -g -o dtldmonitor tldmonitor.c date.c tldlist.c
 
 datetests: test_date.c date.c tldlist.c
 	clang -Wall -Werror -g -o datetest.o test_date.c
