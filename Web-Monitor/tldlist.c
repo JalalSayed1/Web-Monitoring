@@ -186,8 +186,8 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
     // hostname is case insensitive:
     // lowercase hostname and store it in a new variable which size is the same as the original:
     int i = 0;
-    while (hostname[i] != '\0') {
-        lower_hostname[i] = tolower(hostname[i]);
+    while (only_tld[i] != '\0') {
+        lower_hostname[i] = tolower(only_tld[i]);
         i++;
     }
     lower_hostname[i] = '\0';
@@ -213,8 +213,9 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
             add_status = 1;
         }
     }
-    free(lower_hostname);
-    lower_hostname = NULL;
+    //!
+    // free(lower_hostname);
+    // lower_hostname = NULL;
     return add_status;
 }
 
