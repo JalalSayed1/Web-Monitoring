@@ -12,7 +12,7 @@ tldmonitor.o: tldmonitor.c date.h tldlist.h
 
 # for testing:
 cktldmonitor: tldmonitor.c date.c tldlist.c
-	clang -Wall -Werror -fsanitize=memory -fno-omit-frame-pointer -o2 -g -o cktldmonitor.o tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o2 -g -o cktldmonitor.o tldmonitor.c date.c tldlist.c
 
 dtldmonitor: tldmonitor.c date.c tldlist.c
 	clang -Wall -Werror -g -o dtldmonitor.o tldmonitor.c date.c tldlist.c

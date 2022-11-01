@@ -276,8 +276,7 @@ long tldlist_count(TLDList *tld) {
 
     printf("--------------------counting tldlist---------------------\n");
 
-
-    if (!(tld) || !(tld->root)){
+    if (!(tld) || !(tld->root)) {
         printf("tldlist is empty\n");
         return 0;
     }
@@ -323,7 +322,7 @@ TLDNode *find_most_right(TLDNode *root) {
 }
 
 TLDIterator *tldlist_iter_create(TLDList *tld) {
-    
+
     printf("--------------------creating iter---------------------\n");
 
     TLDIterator *iter = NULL;
@@ -385,7 +384,7 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
         return NULL;
 
     // if iter doesn't have current node yet (i.e this is the first time tldlist_iter_next is called):
-    if (!(iter->current_node)){
+    if (!(iter->current_node)) {
         printf("iter doesn't have current node\n");
         iter->current_node = find_first_iter_node(iter);
         printf("    this iter's current node (after calling next) is %s\n", iter->current_node->hostname);
@@ -401,7 +400,7 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
 
             iter->current_node = iter->current_node->parent;
             printf("    went to its parent %s\n", iter->current_node->hostname);
-            
+
             // if right child exist, go there:
             if (iter->current_node->right) {
                 printf("    %s has right child\n", iter->current_node->hostname);
