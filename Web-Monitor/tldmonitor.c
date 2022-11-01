@@ -10,23 +10,23 @@ static void process(FILE *fd, TLDList *tld) {
     Date *d;
     while (fgets(bf, sizeof(bf), fd) != NULL) {
         char *q, *p = strchr(bf, ' ');
-        if (p == NULL) {
+	if (p == NULL) {
             fprintf(stderr, "Illegal input line: %s", bf);
-            return;
+	    return;
         }
-        strcpy(sbf, bf);
-        *p++ = '\0';
-        while (*p == ' ')
+	strcpy(sbf, bf);
+	*p++ = '\0';
+	while (*p == ' ')
             p++;
-        q = strchr(p, '\n');
-        if (q == NULL) {
+	q = strchr(p, '\n');
+	if (q == NULL) {
             fprintf(stderr, "Illegal input line: %s", sbf);
-            return;
+	    return;
         }
-        *q = '\0';
-        d = date_create(bf);
-        (void)tldlist_add(tld, p, d);
-        date_destroy(d);
+	*q = '\0';
+	d = date_create(bf);
+	(void) tldlist_add(tld, p, d);
+	date_destroy(d);
     }
 }
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     }
     if (date_compare(begin, end) > 0) {
         fprintf(stderr, "%s > %s\n", argv[1], argv[2]);
-        goto error;
+	goto error;
     }
     tld = tldlist_create(begin, end);
     if (tld == NULL) {
@@ -80,35 +80,23 @@ int main(int argc, char *argv[]) {
         }
     }
     total = (double)tldlist_count(tld);
-    //! print total:
-    printf("Total: %ld\n", (long)total);
-    
     it = tldlist_iter_create(tld);
     if (it == NULL) {
         fprintf(stderr, "Unable to create iterator\n");
         goto error;
     }
     while ((n = tldlist_iter_next(it))) {
-        //! print tld and count:
-        printf("%s: %ld\n", tldnode_tldname(n), (long)tldnode_count(n));
-
-        printf("%6.2f %s\n", 100.0 * (double)tldnode_count(n) / total, tldnode_tldname(n));
+        printf("%6.2f %s\n", 100.0 * (double)tldnode_count(n)/total, tldnode_tldname(n));
     }
-    //! problem in tldlist_iter_destroy
-    printf("destroying iterator, list and dates..\n");
     tldlist_iter_destroy(it);
     tldlist_destroy(tld);
     date_destroy(begin);
     date_destroy(end);
     return 0;
 error:
-    if (it != NULL)
-        tldlist_iter_destroy(it);
-    if (tld != NULL)
-        tldlist_destroy(tld);
-    if (end != NULL)
-        date_destroy(end);
-    if (begin != NULL)
-        date_destroy(begin);
+    if (it != NULL)	tldlist_iter_destroy(it);
+    if (tld != NULL)	tldlist_destroy(tld);
+    if (end != NULL)	date_destroy(end);
+    if (begin != NULL)	date_destroy(begin);
     return -1;
 }

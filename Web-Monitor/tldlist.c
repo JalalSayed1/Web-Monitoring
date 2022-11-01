@@ -130,75 +130,81 @@ int tldnode_create(char *hostname, TLDNode *parent) {
 // return 0 on failure, 1 on success
 TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
 
-    int add_status = 0;
-    TLDNode *new_node = NULL;
+    // if root is null (base case):
+    if (!root) {
+        if ((root = (TLDNode *)malloc(sizeof(TLDNode)))) {
+            printf("root now is null, creating new node for %s\n", hostname);
+            root->hostname = hostname;
+            root->count = 1;
+            root->left = NULL;
+            root->right = NULL;
+            root->parent = NULL;
+            return root;
+        }
+    }
 
     // if root is not null:
-    if (root) {
-        printf("root is not null, root->hostname: %s\n", root->hostname);
+    int add_status = 0;
+    printf("root is not null, root->hostname: %s\n", root->hostname);
 
-        int compare_status = strcmp(hostname, root->hostname);
+    int compare_status = strcmp(hostname, root->hostname);
+    if (compare_status == 0) {
+        printf("hostname already exists in tree, incrementing counter of %s now. \n", hostname);
+        // if this is the node we want:
+        // increment the count:
+        root->count++;
+        printf("    New %s count is: %d\n", hostname, root->count);
+        add_status = 1;
 
-        if (compare_status == 0) {
-            printf("hostname already exists in tree, incrementing counter now %s\n", hostname);
-            // if this is the node we want:
-            // increment the count:
-            root->count++;
+        // free the hostname as it is not needed:
+        free(hostname);
+        hostname = NULL;
+
+    } else if (compare_status < 0) {
+        printf("hostname is less than root, going left %s\n", hostname);
+        // go node to go left, recursive call and assign previous node as its parent:
+        TLDNode *left_child = tldlist_addbynode(root->left, hostname);
+        // if add has been successful:
+        if (left_child) {
+            printf("left add was successful, assigning root's left child \"%s\" to %s \n", root->hostname, hostname);
+            root->left = left_child;
+            printf("assigning parent of %s to be %s \n", left_child->hostname, root->hostname);
+            left_child->parent = root;
             add_status = 1;
-
-            // free the hostname as it is not needed:
-            free(hostname);
-            hostname = NULL;
-
-        } else if (compare_status < 0) {
-            printf("hostname is less than root, going left %s\n", hostname);
-            // go node to go left, recursive call and assign previous node as its parent:
-            new_node = tldlist_addbynode(root->left, hostname);
-            // if add has been successful:
-            if (new_node) {
-                printf("left add was successful, assigning root \"%s\" to %s \n", root->hostname, hostname);
-                // link left child to new node:
-                root->left = new_node;
-                // link the new node to the parent:
-                new_node->parent = root;
-                add_status = 1;
-            }
-
-        } else {
-            printf("hostname is greater than root, going right %s\n", hostname);
-            // go to right:
-            new_node = tldlist_addbynode(root->right, hostname);
-            // if add has been successful:
-            if (new_node) {
-                printf("right add was successful, assigning root \"%s\" to %s \n", root->hostname, hostname);
-                // link right child to new node:
-                root->right = new_node;
-
-                printf("assigning parent of %s to %s \n", root->hostname, hostname);
-                // link the new node to the parent:
-                new_node->parent = root;
-                add_status = 1;
-            }
+            printf("returning left child %s with count %d, parent %s and root->left (should be left child %s) %s\n", left_child->hostname, left_child->count, left_child->parent->hostname, left_child->hostname, root->left->hostname);
+            //! return root;
         }
 
-        // if root is null, make it:
-    } else if ((root = (TLDNode *)malloc(sizeof(TLDNode)))) {
-        printf("root now is null, creating new node for %s\n", hostname);
-        root->hostname = hostname;
-        root->count = 1;
-        root->left = NULL;
-        root->right = NULL;
-        //! is the parent node getting assigned correctly in first if statement?
-        root->parent = NULL;
-        add_status = 1;
-    }
+    } else if (compare_status > 0) {
+        printf("hostname is greater than root, going right %s\n", hostname);
+        // go to right:
+        TLDNode *right_child = tldlist_addbynode(root->right, hostname);
+        // if add has been successful:
+        if (right_child) {
+            printf("right add was successful, assigning root's right child \"%s\" to %s \n", root->hostname, hostname);
+            // link right child to new node:
+            root->right = right_child;
 
-    if (add_status == 1) {
-        printf("add was successful, returning node %s\n", hostname);
-        return root;
+            printf("assigning parent of %s to be %s \n", right_child->hostname, root->hostname);
+            // link the new node to the parent:
+            right_child->parent = root;
+            add_status = 1;
+            printf("returning right child %s with count %d, parent %s and root->right (should be right child %s) %s\n", right_child->hostname, right_child->count, right_child->parent->hostname, right_child->hostname, root->right->hostname);
+            //! return root;
+        }
     }
-    printf("add_status is 0, returning NULL\n");
-    return NULL;
+    //! was NULL
+    return root;
+    //!
+    // printf("add_status: %d and addbynode will return node %s with count %d\n", add_status, root->hostname, root->count);
+    // return root;
+
+    // if add was successful:
+    // if (add_status) {
+    //     printf("add was successful, returning node %s\n", hostname);
+    // }
+    // printf("add_status is 0, returning NULL\n");
+    // return NULL;
 }
 
 int tldlist_add(TLDList *tld, char *hostname, Date *d) {
@@ -212,7 +218,6 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
     char *only_tld = find_tld(hostname);
 
     char *lower_hostname = (char *)malloc(strlen(only_tld) + 1);
-
     //! char lower_hostname[strlen(only_tld)];
     // hostname is case insensitive:
     // lowercase hostname and store it in a new variable which size is the same as the original:
@@ -236,6 +241,7 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
             tld->root->left = NULL;
             tld->root->right = NULL;
             tld->root->parent = NULL;
+            printf("first node added successfully %s with count %d\n", tld->root->hostname, tld->root->count);
             add_status = 1;
         }
     } else {
@@ -244,16 +250,17 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
 
         // if the node was added:
         if (added_node) {
-            printf("added node is %s\n", added_node->hostname);
-            if (added_node->parent) {
-                printf("    added node's parent is %s\n", added_node->parent->hostname);
-            }
-            if (added_node->left) {
-                printf("    added node's left child is %s\n", added_node->left->hostname);
-            }
-            if (added_node->right) {
-                printf("    added node's right child is %s\n", added_node->right->hostname);
-            }
+            //!
+            // printf("ADD: added node %s to list\n", added_node->hostname);
+            // if (added_node->parent) {
+            //     printf("    added node's parent is %s\n", added_node->parent->hostname);
+            // }
+            // if (added_node->left) {
+            //     printf("    added node's left child is %s\n", added_node->left->hostname);
+            // }
+            // if (added_node->right) {
+            //     printf("    added node's right child is %s\n", added_node->right->hostname);
+            // }
 
             add_status = 1;
         }
@@ -266,42 +273,97 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
 
 long tldlist_count(TLDList *tld) {
 
-    long count = 0;
+    printf("--------------------counting tldlist---------------------\n");
 
-    if (!(tld) || !(tld->root))
+
+    if (!(tld) || !(tld->root)){
+        printf("tldlist is empty\n");
         return 0;
+    }
 
+    printf("tldlist is not empty, making iter..\n");
+    long count = 0;
     TLDIterator *iter = NULL;
     iter = tldlist_iter_create(tld);
-    count += iter->current_node->count;
+    printf("iter created, first node is %s\n", iter->current_node->hostname);
+    //! count += iter->current_node->count;
+    //!
+    TLDNode *n = NULL;
+    n = iter->current_node;
+    //! count += n->count;
 
-    while ((iter->current_node = tldlist_iter_next(iter))) {
-        count += iter->current_node->count;
+    // until n becomes NULL (end of list):
+    while (n) {
+        count += n->count;
+        printf("    iterating, current node is %s | its count is %d and total count is %ld\n", n->hostname, n->count, count);
+        n = tldlist_iter_next(iter);
     }
     tldlist_iter_destroy(iter);
+    printf("Final count is %ld\n", count);
     return count;
 }
 
+TLDNode *find_most_left(TLDNode *root) {
+    printf("finding the most left node\n");
+    while (root->left) {
+        root = root->left;
+    }
+    printf("    most left node is %s\n", root->hostname);
+    return root;
+}
+
+TLDNode *find_most_right(TLDNode *root) {
+    printf("finding the most right node\n");
+    while (root->right) {
+        root = root->right;
+    }
+    printf("    most right node is %s\n", root->hostname);
+    return root;
+}
+
 TLDIterator *tldlist_iter_create(TLDList *tld) {
+    
+    printf("--------------------creating iter---------------------\n");
+
     TLDIterator *iter = NULL;
 
     if ((iter = malloc(sizeof(TLDIterator)))) {
+        printf("iter created\n");
         iter->current_node = tld->root;
+        printf("iter's first node is %s\n", iter->current_node->hostname);
 
+        //!
         // Post order => Left, Right, Root
         // find the most left node:
-        while (iter->current_node->left) {
-            iter->current_node = iter->current_node->left;
-        }
+        // printf("finding the most left node\n");
+        // iter->current_node = find_most_left(iter->current_node);
+        // printf("    most left node is %s\n", iter->current_node->hostname);
 
-        // find the most right node:
-        while (iter->current_node->right) {
-            iter->current_node = iter->current_node->right;
-        }
+        // // find the most right node:
+        // printf("finding the most right node\n");
+        // iter->current_node = find_most_right(iter->current_node);
+        // printf("    most right node is %s\n", iter->current_node->hostname);
 
         return iter;
     }
     return NULL;
+}
+
+// find the first node in list which iter points to:
+TLDNode *find_first_iter_node(TLDIterator *iter) {
+    printf("finding the first node in list which iter points to\n");
+    while (iter->current_node->left || iter->current_node->right) {
+
+        if (iter->current_node->left) {
+            iter->current_node = find_most_left(iter->current_node);
+            printf("    iter's current node is %s\n", iter->current_node->hostname);
+
+        } else if (iter->current_node->right) {
+            iter->current_node = find_most_right(iter->current_node);
+            printf("    iter's current node is %s\n", iter->current_node->hostname);
+        }
+    }
+    return iter->current_node;
 }
 
 // find the next logical successor from current node:
@@ -309,30 +371,50 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 // Post order = > Left, Right, Root
 TLDNode *tldlist_iter_next(TLDIterator *iter) {
 
-    if (!(iter) || !(iter->current_node))
+    printf("--------------------iterating next---------------------\n");
+
+    if (!(iter))
         return NULL;
+
+    // if iter doesn't have current node yet (i.e this is the first time tldlist_iter_next is called):
+    if (!(iter->current_node)){
+        printf("iter doesn't have current node\n");
+        iter->current_node = find_first_iter_node(iter);
+        printf("    this iter's current node (after calling next) is %s\n", iter->current_node->hostname);
+        return iter->current_node;
+    }
 
     // find parent
     if (iter->current_node->parent) {
         // if this node is its left child, check if right child exist
         if (iter->current_node == iter->current_node->parent->left) {
 
+            printf("    %s was its left child\n", iter->current_node->hostname);
+
             iter->current_node = iter->current_node->parent;
+            printf("    went to its parent %s\n", iter->current_node->hostname);
+            
             // if right child exist, go there:
             if (iter->current_node->right) {
-                iter->current_node = iter->current_node->right;
+                printf("    %s has right child\n", iter->current_node->hostname);
+                iter->current_node = find_most_left(iter->current_node->right);
+                iter->current_node = find_most_right(iter->current_node);
+                printf("    iter's current node is %s\n", iter->current_node->hostname);
+
+                // iter->current_node = iter->current_node->right;
                 // find the most left node:
-                while (iter->current_node->left) {
-                    iter->current_node = iter->current_node->left;
-                }
+                // while (iter->current_node->left) {
+                //     iter->current_node = iter->current_node->left;
+                // }
                 // if we reached the left most child in this subtree, go to right child if it exists:
-                while (iter->current_node->right) {
-                    iter->current_node = iter->current_node->right;
-                }
+                // while (iter->current_node->right) {
+                //     iter->current_node = iter->current_node->right;
+                // }
             }
 
-            // if no, stay on parent node
+            // if no, stay on parent node:
         } else if (iter->current_node == iter->current_node->parent->right) {
+            printf("    %s was right child\n", iter->current_node->hostname);
             // if this node is its right child, go to parent
             iter->current_node = iter->current_node->parent;
         }
@@ -361,8 +443,10 @@ void tldlist_iter_destroy(TLDIterator *iter) {
 }
 
 char *tldnode_tldname(TLDNode *node) {
+    printf("tldnode_tldname returning %s\n", node->hostname);
     return node->hostname;
 }
 long tldnode_count(TLDNode *node) {
+    printf("tldnode_count returning %d for %s\n", node->count, node->hostname);
     return node->count;
 }
