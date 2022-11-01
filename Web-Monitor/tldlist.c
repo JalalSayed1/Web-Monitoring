@@ -24,6 +24,7 @@ struct tldnode {
 struct tlditerator {
     // make an array of pointer pointing to all the nodes inorder and store the index here.
     struct tldnode *current_node;
+    struct tldnode *list_root;
 };
 
 TLDList *tldlist_create(Date *begin, Date *end) {
@@ -285,11 +286,11 @@ long tldlist_count(TLDList *tld) {
     long count = 0;
     TLDIterator *iter = NULL;
     iter = tldlist_iter_create(tld);
-    printf("iter created, first node is %s\n", iter->current_node->hostname);
+    printf("iter created, first node is %s\n", iter->list_root->hostname);
     //! count += iter->current_node->count;
     //!
     TLDNode *n = NULL;
-    n = iter->current_node;
+    n = tldlist_iter_next(iter);
     //! count += n->count;
 
     // until n becomes NULL (end of list):
@@ -329,8 +330,9 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 
     if ((iter = malloc(sizeof(TLDIterator)))) {
         printf("iter created\n");
-        iter->current_node = tld->root;
-        printf("iter's first node is %s\n", iter->current_node->hostname);
+        iter->current_node = NULL;
+        iter->list_root = tld->root;
+        printf("iter's list root is %s\n", iter->list_root->hostname);
 
         //!
         // Post order => Left, Right, Root
@@ -352,17 +354,23 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 // find the first node in list which iter points to:
 TLDNode *find_first_iter_node(TLDIterator *iter) {
     printf("finding the first node in list which iter points to\n");
-    while (iter->current_node->left || iter->current_node->right) {
+    TLDNode *n = iter->list_root;
 
-        if (iter->current_node->left) {
-            iter->current_node = find_most_left(iter->current_node);
-            printf("    iter's current node is %s\n", iter->current_node->hostname);
+    // if n has left or right children:
+    while (n->left || n->right) {
 
-        } else if (iter->current_node->right) {
-            iter->current_node = find_most_right(iter->current_node);
-            printf("    iter's current node is %s\n", iter->current_node->hostname);
+        if (n->left) {
+            n = find_most_left(n);
+            //!
+            // printf("    n node is %s\n", n->hostname);
+
+        } else if (n->right) {
+            n = find_most_right(n);
+            // printf("    n node is %s\n", n->hostname);
         }
     }
+    iter->current_node = n;
+    printf("    iter's first node is %s\n", iter->current_node->hostname);
     return iter->current_node;
 }
 
