@@ -1,7 +1,6 @@
 #include "date.h"
 #include <stdio.h>
 #include <stdlib.h>
-// #include <string.h>
 
 // create the date struct:
 struct date {
@@ -48,7 +47,6 @@ Date *date_duplicate(Date *d) {
     Date *new = NULL;
 
     if ((new = (struct date *)malloc(sizeof(struct date)))) {
-
         new->day = d->day;
         new->month = d->month;
         new->year = d->year;
