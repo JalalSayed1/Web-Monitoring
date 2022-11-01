@@ -90,7 +90,7 @@ void tldlist_destroy(TLDList *tld) {
         tldlist_iter_destroy(iter);
         tldlist_iter_destroy(temp_iter);
 
-    // else if tld is not null:
+        // else if tld is not null:
     } else if (tld) {
         free(tld);
         tld = NULL;
@@ -133,11 +133,14 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
     int add_status = 0;
     TLDNode *new_node = NULL;
 
+    // if root is not null:
     if (root) {
+        printf("root is not null, root->hostname: %s\n", root->hostname);
 
         int compare_status = strcmp(hostname, root->hostname);
 
         if (compare_status == 0) {
+            printf("hostname already exists in tree, incrementing counter now %s\n", hostname);
             // if this is the node we want:
             // increment the count:
             root->count++;
@@ -148,9 +151,12 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
             hostname = NULL;
 
         } else if (compare_status < 0) {
+            printf("hostname is less than root, going left %s\n", hostname);
             // go node to go left, recursive call and assign previous node as its parent:
             new_node = tldlist_addbynode(root->left, hostname);
+            // if add has been successful:
             if (new_node) {
+                printf("left add was successful, assigning root \"%s\" to %s \n", root->hostname, hostname);
                 // link left child to new node:
                 root->left = new_node;
                 // link the new node to the parent:
@@ -159,11 +165,16 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
             }
 
         } else {
+            printf("hostname is greater than root, going right %s\n", hostname);
             // go to right:
             new_node = tldlist_addbynode(root->right, hostname);
+            // if add has been successful:
             if (new_node) {
+                printf("right add was successful, assigning root \"%s\" to %s \n", root->hostname, hostname);
                 // link right child to new node:
                 root->right = new_node;
+
+                printf("assigning parent of %s to %s \n", root->hostname, hostname);
                 // link the new node to the parent:
                 new_node->parent = root;
                 add_status = 1;
@@ -172,17 +183,21 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
 
         // if root is null, make it:
     } else if ((root = (TLDNode *)malloc(sizeof(TLDNode)))) {
+        printf("root now is null, creating new node for %s\n", hostname);
         root->hostname = hostname;
         root->count = 1;
         root->left = NULL;
         root->right = NULL;
+        //! is the parent node getting assigned correctly in first if statement?
         root->parent = NULL;
         add_status = 1;
     }
 
     if (add_status == 1) {
+        printf("add was successful, returning node %s\n", hostname);
         return root;
     }
+    printf("add_status is 0, returning NULL\n");
     return NULL;
 }
 
@@ -190,12 +205,14 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
 
     // if d is not within the range:
     if (date_compare(d, tld->begin) < 0 || date_compare(d, tld->end) > 0) {
+        printf("Date is not within the range of the tldlist for %s\n", hostname);
         return 0;
     }
 
     char *only_tld = find_tld(hostname);
 
     char *lower_hostname = (char *)malloc(strlen(only_tld) + 1);
+
     //! char lower_hostname[strlen(only_tld)];
     // hostname is case insensitive:
     // lowercase hostname and store it in a new variable which size is the same as the original:
@@ -205,12 +222,13 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
         i++;
     }
     lower_hostname[i] = '\0';
+    printf("only_tld after lowering: %s\n", lower_hostname);
 
     int add_status = 0;
 
     // if this is the first node:
     if (!(tld->root)) {
-
+        printf("first node to add is %s\n", lower_hostname);
         // if root is null, make it:
         if ((tld->root = (TLDNode *)malloc(sizeof(TLDNode)))) {
             tld->root->hostname = lower_hostname;
@@ -221,10 +239,22 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
             add_status = 1;
         }
     } else {
-
+        printf("Not the first node, adding node %s\n", lower_hostname);
         TLDNode *added_node = tldlist_addbynode(tld->root, lower_hostname);
+
         // if the node was added:
         if (added_node) {
+            printf("added node is %s\n", added_node->hostname);
+            if (added_node->parent) {
+                printf("    added node's parent is %s\n", added_node->parent->hostname);
+            }
+            if (added_node->left) {
+                printf("    added node's left child is %s\n", added_node->left->hostname);
+            }
+            if (added_node->right) {
+                printf("    added node's right child is %s\n", added_node->right->hostname);
+            }
+
             add_status = 1;
         }
     }

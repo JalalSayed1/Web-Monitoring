@@ -80,15 +80,22 @@ int main(int argc, char *argv[]) {
         }
     }
     total = (double)tldlist_count(tld);
+    //! print total:
+    printf("Total: %ld\n", (long)total);
+    
     it = tldlist_iter_create(tld);
     if (it == NULL) {
         fprintf(stderr, "Unable to create iterator\n");
         goto error;
     }
     while ((n = tldlist_iter_next(it))) {
+        //! print tld and count:
+        printf("%s: %ld\n", tldnode_tldname(n), (long)tldnode_count(n));
+
         printf("%6.2f %s\n", 100.0 * (double)tldnode_count(n) / total, tldnode_tldname(n));
     }
     //! problem in tldlist_iter_destroy
+    printf("destroying iterator, list and dates..\n");
     tldlist_iter_destroy(it);
     tldlist_destroy(tld);
     date_destroy(begin);
