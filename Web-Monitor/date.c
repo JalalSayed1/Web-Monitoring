@@ -12,9 +12,9 @@ struct date {
 
 Date *date_create(char *datestr) {
     // pointer to date struct:
-    struct date *d;
+    struct date *d = NULL;
 
-    if ((d = (struct date *)malloc(sizeof(struct date))) != NULL) {
+    if ((d = (struct date *)malloc(sizeof(struct date)))) {
         // first 2 chars of datestr are for int day:
         char day[3];
         day[0] = datestr[0];
@@ -45,9 +45,9 @@ Date *date_create(char *datestr) {
 }
 
 Date *date_duplicate(Date *d) {
-    Date *new;
+    Date *new = NULL;
 
-    if ((new = (struct date *)malloc(sizeof(struct date))) != NULL) {
+    if ((new = (struct date *)malloc(sizeof(struct date)))) {
 
         new->day = d->day;
         new->month = d->month;
@@ -80,7 +80,7 @@ int date_compare(Date *date1, Date *date2) {
 }
 
 void date_destroy(Date *d) {
-    if (d != NULL) {
+    if (d) {
         free(d);
         d = NULL;
     }

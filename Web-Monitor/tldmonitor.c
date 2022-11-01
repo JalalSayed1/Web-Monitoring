@@ -88,6 +88,7 @@ int main(int argc, char *argv[]) {
     while ((n = tldlist_iter_next(it))) {
         printf("%6.2f %s\n", 100.0 * (double)tldnode_count(n) / total, tldnode_tldname(n));
     }
+    //! problem in tldlist_iter_destroy
     tldlist_iter_destroy(it);
     tldlist_destroy(tld);
     date_destroy(begin);

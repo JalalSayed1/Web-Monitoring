@@ -28,8 +28,8 @@ struct tlditerator {
 
 TLDList *tldlist_create(Date *begin, Date *end) {
     // pointer to tldlist struct:
-    TLDList *tld;
-    if ((tld = (TLDList *)malloc(sizeof(TLDList))) != NULL) {
+    TLDList *tld = NULL;
+    if ((tld = (TLDList *)malloc(sizeof(TLDList)))) {
         tld->root = NULL;
         tld->begin = begin;
         tld->end = end;
@@ -40,53 +40,58 @@ TLDList *tldlist_create(Date *begin, Date *end) {
 
 void tldlist_destroy(TLDList *tld) {
 
-    if (tld != NULL && tld->root != NULL) {
+    // if tld and root are not null:
+    if (tld && tld->root) {
 
         TLDIterator *iter = tldlist_iter_create(tld);
         TLDIterator *temp_iter = tldlist_iter_create(tld);
 
         temp_iter->current_node = tldlist_iter_next(temp_iter);
 
-        while (iter->current_node != NULL) {
+        while (iter->current_node) {
 
             // double check that left and right nodes are freed:
             //! do I need this section?
-            if (iter->current_node->left != NULL) {
-                free(iter->current_node->left);
-                iter->current_node->left = NULL;
-            }
-            if (iter->current_node->right != NULL) {
-                free(iter->current_node->right);
-                iter->current_node->right = NULL;
-            }
+            // if (iter->current_node->left != NULL) {
+            //     free(iter->current_node->left->hostname);
+            //     iter->current_node->left->hostname = NULL;
+            //     free(iter->current_node->left);
+            //     iter->current_node->left = NULL;
+            // }
+            // if (iter->current_node->right != NULL) {
+            //     free(iter->current_node->right->hostname);
+            //     iter->current_node->right->hostname = NULL;
+            //     free(iter->current_node->right);
+            //     iter->current_node->right = NULL;
+            // }
 
             // make parent node point to NULL children:
             iter->current_node->left = NULL;
             iter->current_node->right = NULL;
-            // free hotname:
+            // free hostname:
             free(iter->current_node->hostname);
             iter->current_node->hostname = NULL;
             // free node:
             free(iter->current_node);
             iter->current_node = NULL;
-
+            // move to next node:
             iter->current_node = temp_iter->current_node;
             temp_iter->current_node = tldlist_iter_next(temp_iter);
         }
 
         // free the dates of the tldlist:
-        date_destroy(tld->begin);
-        date_destroy(tld->end);
-
-        // free the iterators:
-        tldlist_iter_destroy(iter);
-        tldlist_iter_destroy(temp_iter);
+        //! date_destroy(tld->end);
+        //! date_destroy(tld->begin);
 
         // free the tldlist itself:
         free(tld);
         tld = NULL;
+        // free the iterators:
+        tldlist_iter_destroy(iter);
+        tldlist_iter_destroy(temp_iter);
 
-    } else if (tld != NULL) {
+    // else if tld is not null:
+    } else if (tld) {
         free(tld);
         tld = NULL;
     }
@@ -109,8 +114,8 @@ char *find_tld(char *hostname) {
 
 int tldnode_create(char *hostname, TLDNode *parent) {
     // create a new node
-    struct tldnode *new_node;
-    if ((new_node = (struct tldnode *)malloc(sizeof(struct tldnode))) != NULL) {
+    struct tldnode *new_node = NULL;
+    if ((new_node = (struct tldnode *)malloc(sizeof(struct tldnode)))) {
         new_node->hostname = hostname;
         new_node->count = 1;
         new_node->left = NULL;
@@ -128,20 +133,27 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
     int add_status = 0;
     TLDNode *new_node = NULL;
 
-    if (root != NULL) {
+    if (root) {
 
         int compare_status = strcmp(hostname, root->hostname);
 
         if (compare_status == 0) {
             // if this is the node we want:
+            // increment the count:
             root->count++;
             add_status = 1;
+
+            // free the hostname as it is not needed:
+            free(hostname);
+            hostname = NULL;
 
         } else if (compare_status < 0) {
             // go node to go left, recursive call and assign previous node as its parent:
             new_node = tldlist_addbynode(root->left, hostname);
-            if (new_node != NULL) {
+            if (new_node) {
+                // link left child to new node:
                 root->left = new_node;
+                // link the new node to the parent:
                 new_node->parent = root;
                 add_status = 1;
             }
@@ -149,15 +161,17 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
         } else {
             // go to right:
             new_node = tldlist_addbynode(root->right, hostname);
-            if (new_node != NULL) {
+            if (new_node) {
+                // link right child to new node:
                 root->right = new_node;
+                // link the new node to the parent:
                 new_node->parent = root;
                 add_status = 1;
             }
         }
 
         // if root is null, make it:
-    } else if ((root = (TLDNode *)malloc(sizeof(TLDNode))) != NULL) {
+    } else if ((root = (TLDNode *)malloc(sizeof(TLDNode)))) {
         root->hostname = hostname;
         root->count = 1;
         root->left = NULL;
@@ -195,10 +209,10 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
     int add_status = 0;
 
     // if this is the first node:
-    if (tld->root == NULL) {
+    if (!(tld->root)) {
 
         // if root is null, make it:
-        if ((tld->root = (TLDNode *)malloc(sizeof(TLDNode))) != NULL) {
+        if ((tld->root = (TLDNode *)malloc(sizeof(TLDNode)))) {
             tld->root->hostname = lower_hostname;
             tld->root->count = 1; // first node added
             tld->root->left = NULL;
@@ -209,12 +223,13 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
     } else {
 
         TLDNode *added_node = tldlist_addbynode(tld->root, lower_hostname);
-        if (added_node != NULL) {
+        // if the node was added:
+        if (added_node) {
             add_status = 1;
         }
     }
     //!
-    // free(lower_hostname);
+    //  free(lower_hostname);
     // lower_hostname = NULL;
     return add_status;
 }
@@ -223,13 +238,14 @@ long tldlist_count(TLDList *tld) {
 
     long count = 0;
 
-    if (tld == NULL || tld->root == NULL)
+    if (!(tld) || !(tld->root))
         return 0;
 
-    TLDIterator *iter = tldlist_iter_create(tld);
+    TLDIterator *iter = NULL;
+    iter = tldlist_iter_create(tld);
     count += iter->current_node->count;
 
-    while ((iter->current_node = tldlist_iter_next(iter)) != NULL) {
+    while ((iter->current_node = tldlist_iter_next(iter))) {
         count += iter->current_node->count;
     }
     tldlist_iter_destroy(iter);
@@ -237,19 +253,19 @@ long tldlist_count(TLDList *tld) {
 }
 
 TLDIterator *tldlist_iter_create(TLDList *tld) {
-    TLDIterator *iter;
+    TLDIterator *iter = NULL;
 
-    if ((iter = malloc(sizeof(TLDIterator))) != NULL) {
+    if ((iter = malloc(sizeof(TLDIterator)))) {
         iter->current_node = tld->root;
 
         // Post order => Left, Right, Root
         // find the most left node:
-        while (iter->current_node->left != NULL) {
+        while (iter->current_node->left) {
             iter->current_node = iter->current_node->left;
         }
 
         // find the most right node:
-        while (iter->current_node->right != NULL) {
+        while (iter->current_node->right) {
             iter->current_node = iter->current_node->right;
         }
 
@@ -263,23 +279,24 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 // Post order = > Left, Right, Root
 TLDNode *tldlist_iter_next(TLDIterator *iter) {
 
-    if (iter == NULL || iter->current_node == NULL)
+    if (!(iter) || !(iter->current_node))
         return NULL;
 
     // find parent
-    if (iter->current_node->parent != NULL) {
+    if (iter->current_node->parent) {
         // if this node is its left child, check if right child exist
         if (iter->current_node == iter->current_node->parent->left) {
+
             iter->current_node = iter->current_node->parent;
             // if right child exist, go there:
-            if (iter->current_node->right != NULL) {
+            if (iter->current_node->right) {
                 iter->current_node = iter->current_node->right;
                 // find the most left node:
-                while (iter->current_node->left != NULL) {
+                while (iter->current_node->left) {
                     iter->current_node = iter->current_node->left;
                 }
                 // if we reached the left most child in this subtree, go to right child if it exists:
-                while (iter->current_node->right != NULL) {
+                while (iter->current_node->right) {
                     iter->current_node = iter->current_node->right;
                 }
             }
@@ -296,15 +313,21 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
 }
 
 void tldlist_iter_destroy(TLDIterator *iter) {
-    if (iter != NULL && iter->current_node != NULL) {
-        free(iter->current_node);
-        iter->current_node = NULL;
-        free(iter);
-        iter = NULL;
-    } else if (iter != NULL) {
+    if (iter) {
         free(iter);
         iter = NULL;
     }
+    // if (iter != NULL && iter->current_node != NULL) {
+    // free(iter->current_node->hostname);
+    // iter->current_node->hostname = NULL;
+    // free(iter->current_node);
+    // iter->current_node = NULL;
+    //     free(iter);
+    //     iter = NULL;
+    // } else if (iter != NULL) {
+    //     free(iter);
+    //     iter = NULL;
+    // }
 }
 
 char *tldnode_tldname(TLDNode *node) {

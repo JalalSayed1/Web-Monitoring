@@ -7,7 +7,7 @@ TLDList *make_list() {
     Date *d1 = date_create("20/12/2018");
     Date *d2 = date_create("15/10/2019");
     TLDList *tldlist = tldlist_create(d1, d2);
-    
+
     return tldlist;
 }
 
@@ -47,6 +47,11 @@ void test_tldlist_create() {
 
     printf("\tbegin date: %d/%d/%d\t\t%s\n", tldlist->begin->day, tldlist->begin->month, tldlist->begin->year, (tldlist->begin->day == 20 && tldlist->begin->month == 12 && tldlist->begin->year == 2018) ? "PASS" : "FAIL");
     printf("\tend date: %d/%d/%d\t\t%s\n", tldlist->end->day, tldlist->end->month, tldlist->end->year, (tldlist->end->day == 15 && tldlist->end->month == 10 && tldlist->end->year == 2019) ? "PASS" : "FAIL");
+
+    // free memory:
+    date_destroy(d1);
+    date_destroy(d2);
+    tldlist_destroy(tldlist);
 }
 
 void test_tldlist_add() {
@@ -88,6 +93,17 @@ void test_tldlist_add() {
     printf("TLDList root right count: %d\t\t\t%s\n", tldlist->root->right->count, (tldlist->root->right->count == 1) ? "PASS" : "FAIL");
     printf("TLDList root right right hostname: %s\t\t%s\n", tldlist->root->right->right->hostname, (strcmp(tldlist->root->right->right->hostname, "sy") == 0) ? "PASS" : "FAIL");
     printf("TLDList root right right count: %d\t\t%s\t\t%s\n", tldlist->root->right->right->count, (tldlist->root->right->right->count == 1) ? "PASS" : "FAIL", (tldlist->root->right->right->count == 1) ? "" : "FAIL");
+
+    // free memory:
+    date_destroy(d3);
+    date_destroy(d4);
+    date_destroy(d5);
+    date_destroy(d6);
+    date_destroy(d7);
+    date_destroy(d8);
+    date_destroy(d9);
+    date_destroy(d10);
+    // tldlist_destroy(tldlist);
 }
 
 // test tldlist_iter_create
@@ -101,6 +117,10 @@ void test_iter_create() {
     TLDIterator *iter = tldlist_iter_create(list);
 
     printf("iter->current_node: %s with count: %d\t\t%s\n", iter->current_node->hostname, iter->current_node->count, (strcmp(iter->current_node->hostname, "au") == 0 && iter->current_node->count == 1) ? "PASS" : "FAIL");
+
+    // free memory:
+    tldlist_iter_destroy(iter);
+    // tldlist_destroy(list);
 }
 
 // test tldlist_iter_next
@@ -116,6 +136,10 @@ void test_iter_next() {
     tldlist_iter_next(iter);
 
     printf("next iter->current_node: %s with count: %d\t%s\n", iter->current_node->hostname, iter->current_node->count, (strcmp(iter->current_node->hostname, "sy") == 0 && iter->current_node->count == 1) ? "PASS" : "FAIL");
+
+    // free memory:
+    tldlist_iter_destroy(iter);
+    // tldlist_destroy(list);
 }
 
 // test tldlist_destroy:
@@ -127,17 +151,28 @@ void test_tldlist_destroy_one_node() {
     Date *d1 = date_create("05/10/2018");
     tldlist_add(list, "gla.ac.uk", d1);
 
+    // copy of list and dates:
+    Date *begin_copy = date_create("01/01/2018");
+    Date *end_copy = date_create("01/01/2019");
+    TLDList *list_copy = tldlist_create(begin_copy, end_copy);
+    Date *d1_copy = date_create("05/10/2018");
+    tldlist_add(list_copy, "gla.ac.uk", d1_copy);
+
     printf("test_tldlist_destroy...\n");
 
     tldlist_destroy(list);
 
-    printf("list after destroying: %p\t\t\t%s\n", list, (list == NULL) ? "PASS" : "FAIL");
-    printf("list->root: %p\t\t\t\t%s\n", list->root, (list->root == NULL) ? "PASS" : "FAIL");
-    printf("list->begin: %p\t\t\t\t%s\n", list->begin, (list->begin == NULL) ? "PASS" : "FAIL");
-    printf("list->end: %p\t\t\t\t%s\n", list->end, (list->end == NULL) ? "PASS" : "FAIL");
-    printf("list->root->parent: %p\t\t\t%s\n", list->root->parent, (list->root->parent == NULL) ? "PASS" : "FAIL");
-    printf("list->root->left: %p\t\t\t%s\n", list->root->left, (list->root->left == NULL) ? "PASS" : "FAIL");
-    printf("list->root->right: %p\t\t\t\t%s\n", list->root->right, (list->root->right == NULL) ? "PASS" : "FAIL");
+    printf("list after destroying: %p\t\t\t%s\n", list_copy, (list_copy == NULL) ? "PASS" : "FAIL");
+    printf("list_copy->root: %p\t\t\t\t%s\n", list_copy->root, (list_copy->root == NULL) ? "PASS" : "FAIL");
+    printf("list_copy->begin: %p\t\t\t\t%s\n", list_copy->begin, (list_copy->begin == NULL) ? "PASS" : "FAIL");
+    printf("list_copy->end: %p\t\t\t\t%s\n", list_copy->end, (list_copy->end == NULL) ? "PASS" : "FAIL");
+    printf("list_copy->root->parent: %p\t\t\t%s\n", list_copy->root->parent, (list_copy->root->parent == NULL) ? "PASS" : "FAIL");
+    printf("list_copy->root->left: %p\t\t\t%s\n", list_copy->root->left, (list_copy->root->left == NULL) ? "PASS" : "FAIL");
+    printf("list_copy->root->right: %p\t\t\t\t%s\n", list_copy->root->right, (list_copy->root->right == NULL) ? "PASS" : "FAIL");
+
+    // free memory:
+    date_destroy(d1);
+    tldlist_destroy(list_copy);
 }
 
 void test_find_ltd() {
@@ -148,6 +183,10 @@ void test_find_ltd() {
     int compare = strcmp(tld, "UK");
 
     printf("tld: %s\t\t\t\t\t\t%s\n", tld, (compare == 0) ? "PASS" : "FAIL");
+
+    // free memory:
+    free(tld);
+    tld = NULL;
 }
 
 void test_iter_destroy() {
@@ -157,12 +196,22 @@ void test_iter_destroy() {
     printf("test_iter_destroy...\n");
 
     TLDIterator *iter = tldlist_iter_create(list);
-    TLDNode *current_node = iter->current_node;
+    //! TLDNode *current_node = iter->current_node;
+
+    // copy of iter and current_node:
+    //! TLDIterator *iter_copy = tldlist_iter_create(list);
+    //! TLDNode *current_node_copy = iter_copy->current_node;
 
     tldlist_iter_destroy(iter);
 
-    printf("iter after destroy: %p\t\t\t\t%s\n", iter, (iter == NULL) ? "PASS" : "FAIL");
-    printf("current_node after destroy: %p\t\t\t%s\n", current_node, (current_node == NULL) ? "PASS" : "FAIL");
+    //! printf("iter after destroy: %p\t\t\t\t%s\n", iter, (iter == NULL) ? "PASS" : "FAIL");
+    //! printf("current_node after destroy: %p\t\t\t%s\n", current_node_copy, (current_node_copy == NULL) ? "PASS" : "FAIL");
+
+    printf("iter destroyed");
+
+    // free memory:
+    // tldlist_destroy(list);
+    //! tldlist_iter_destroy(iter_copy);
 }
 
 int main(int argc, char const *argv[]) {
@@ -176,7 +225,7 @@ int main(int argc, char const *argv[]) {
 
     test_tldlist_destroy_one_node();
 
-    test_find_ltd();
+    // test_find_ltd();
 
     test_iter_destroy();
 
