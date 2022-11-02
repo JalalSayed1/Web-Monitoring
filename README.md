@@ -7,6 +7,12 @@
 - Each hostname ends with a 2-letter country code such as uk or fr (or a 3-letter code such as com) preceded by a dot (‘.’).
 - The final token in a hostname is usually called the “top level domain”.
  
+## Output:
+- Giving the program an input file such as:
+
+it produces:
+
+
 ## Specification:
 - Given a start date, an end date, and one or more log files, the program is to determine the percentage of access from each TLD during that period, outputting the final percentages on standard output.
 - Hostnames, and therefore, top level domain names, are case-insensitive. Therefore, accesses by X.Y.UK and a.b.uk are both accesses from the same TLD (i.e. uk).
