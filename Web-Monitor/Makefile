@@ -11,12 +11,12 @@ tldmonitor.o: tldmonitor.c date.h tldlist.h
 	clang -Wall -Werror -o tldmonitor.o -c tldmonitor.c
 
 # for testing:
-cktldmonitor: tldmonitor.c date.c tldlist.c
-	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o1 -g -o cktldmonitor.o tldmonitor.c date.c tldlist.c
-ckt2dmonitor: tldmonitor.c date.c tldlist.c
-	clang -Wall -Werror -fsanitize=memory -fno-omit-frame-pointer -o1 -g -o ckt2dmonitor.o tldmonitor.c date.c tldlist.c
-ckt3dmonitor: tldmonitor.c date.c tldlist.c
-	clang -Wall -Werror -fsanitize=undefined -fno-omit-frame-pointer -o1 -g -o ckt3dmonitor.o tldmonitor.c date.c tldlist.c
+ck1tldmonitor: tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o1 -g -o ck1tldmonitor.o tldmonitor.c date.c tldlist.c
+ck2tldmonitor: tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -fsanitize=memory -fno-omit-frame-pointer -o1 -g -o ck2tldmonitor.o tldmonitor.c date.c tldlist.c
+ck3tldmonitor: tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -fsanitize=undefined -fno-omit-frame-pointer -o1 -g -o ck3tldmonitor.o tldmonitor.c date.c tldlist.c
 
 dtldmonitor: tldmonitor.c date.c tldlist.c
 	clang -Wall -Werror -g -o dtldmonitor.o tldmonitor.c date.c tldlist.c
