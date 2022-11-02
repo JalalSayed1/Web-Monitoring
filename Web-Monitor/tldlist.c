@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-    struct tldlist {
+struct tldlist {
     struct tldnode *root;
     Date *begin;
     Date *end;
