@@ -13,8 +13,10 @@ tldmonitor.o: tldmonitor.c date.h tldlist.h
 # for testing:
 ck1tldmonitor: tldmonitor.c date.c tldlist.c
 	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o1 -g -o ck1tldmonitor.o tldmonitor.c date.c tldlist.c
+
 ck2tldmonitor: tldmonitor.c date.c tldlist.c
 	clang -Wall -Werror -fsanitize=memory -fno-omit-frame-pointer -o1 -g -o ck2tldmonitor.o tldmonitor.c date.c tldlist.c
+
 ck3tldmonitor: tldmonitor.c date.c tldlist.c
 	clang -Wall -Werror -fsanitize=undefined -fno-omit-frame-pointer -o1 -g -o ck3tldmonitor.o tldmonitor.c date.c tldlist.c
 

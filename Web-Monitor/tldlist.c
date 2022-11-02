@@ -16,6 +16,8 @@ struct tldnode {
     struct tldnode *left;
     struct tldnode *right;
     struct tldnode *parent;
+
+    // struct tldnode *next;
 };
 
 // An iterator is an object that allows you to step through the contents of another object, by providing convenient operations for getting the first element, testing when you are done, and getting the next element if you are not.
@@ -23,6 +25,36 @@ struct tlditerator {
     struct tldnode *current_node;
     struct tldnode *list_root;
 };
+
+#define COUNT 10
+
+void print2DUtil(TLDNode *root, int space) {
+    // Base case
+    if (root == NULL)
+        return;
+
+    // Increase distance between levels
+    space += COUNT;
+
+    // Process right child first
+    print2DUtil(root->right, space);
+
+    // Print current node after space
+    // count
+    printf("\n");
+    for (int i = COUNT; i < space; i++)
+        printf(" ");
+    printf("|%s %d|\n", root->hostname, root->count);
+
+    // Process left child
+    print2DUtil(root->left, space);
+}
+
+// Wrapper over print2DUtil()
+void print2D(TLDNode *root) {
+    // Pass initial space count as 0
+    print2DUtil(root, 0);
+}
 
 TLDList *tldlist_create(Date *begin, Date *end) {
     TLDList *tld = NULL;
@@ -42,9 +74,10 @@ void tldlist_destroy(TLDList *tld) {
 
         TLDIterator *iter = tldlist_iter_create(tld);
         TLDIterator *temp_iter = tldlist_iter_create(tld);
-        
+
         iter->current_node = tldlist_iter_next(iter);
         temp_iter->current_node = tldlist_iter_next(temp_iter);
+        // temp_iter always points to the next node:
         temp_iter->current_node = tldlist_iter_next(temp_iter);
 
         while (iter->current_node) {
@@ -199,6 +232,10 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
         }
     }
 
+    // printf("Finishing an add..\n");
+    // print2D(tld->root);
+    // printf("--------------------------------\n");
+
     return add_status;
 }
 
@@ -252,7 +289,16 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 
 // find the first node in list which iter points to:
 TLDNode *find_first_iter_node(TLDIterator *iter) {
-    TLDNode *n = iter->list_root;
+    TLDNode *n = NULL;
+
+    if (iter->list_root) {
+        // printf("list_root node is %s\n", iter->list_root->hostname);
+        n = iter->list_root;
+    }
+
+    if (!n) {
+        return NULL;
+    }
 
     // if n has left or right children:
     while (n->left || n->right) {
@@ -264,6 +310,7 @@ TLDNode *find_first_iter_node(TLDIterator *iter) {
             n = find_most_right(n);
         }
     }
+
     iter->current_node = n;
     return iter->current_node;
 }
