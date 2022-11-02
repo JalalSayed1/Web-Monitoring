@@ -1,10 +1,12 @@
+// Authorship statement: This is my own work as defined in the Academic Ethics agreement I have signed.
+
 #include "tldlist.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-struct tldlist {
+    struct tldlist {
     struct tldnode *root;
     Date *begin;
     Date *end;

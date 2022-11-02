@@ -1,3 +1,5 @@
+// Authorship statement: This is my own work as defined in the Academic Ethics agreement I have signed.
+
 #include "date.h"
 #include <stdio.h>
 #include <stdlib.h>
