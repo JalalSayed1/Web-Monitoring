@@ -8,9 +8,12 @@
 - The final token in a hostname is usually called the “top level domain”.
  
 ## Output:
-- Giving the program an input file such as:
+- Running the program by `./tldmonitor 01/01/2000 01/09/2020 <small.txt` where small.txt is:<br/><br/>
+![image](https://user-images.githubusercontent.com/92950538/199577822-c0447a3a-b320-4ab1-8623-69d23eca5d22.png)
 
-it produces:
+- It produces:<br/><br/>
+![image](https://user-images.githubusercontent.com/92950538/199578282-14b7eca1-a218-402f-a41b-7f3380bbfcc9.png)
+
 
 
 ## Specification:
