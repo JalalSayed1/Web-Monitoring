@@ -12,11 +12,11 @@ tldmonitor.o: tldmonitor.c date.h tldlist.h
 
 # for testing:
 cktldmonitor: tldmonitor.c date.c tldlist.c
-	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -01 -g -o cktldmonitor.o tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -fsanitize=address -fno-omit-frame-pointer -o1 -g -o cktldmonitor.o tldmonitor.c date.c tldlist.c
 ckt2dmonitor: tldmonitor.c date.c tldlist.c
-	clang -Wall -Werror -fsanitize=memory -fno-omit-frame-pointer -01 -g -o ckt2dmonitor.o tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -fsanitize=memory -fno-omit-frame-pointer -o1 -g -o ckt2dmonitor.o tldmonitor.c date.c tldlist.c
 ckt3dmonitor: tldmonitor.c date.c tldlist.c
-	clang -Wall -Werror -fsanitize=undefined -fno-omit-frame-pointer -01 -g -o ckt3dmonitor.o tldmonitor.c date.c tldlist.c
+	clang -Wall -Werror -fsanitize=undefined -fno-omit-frame-pointer -o1 -g -o ckt3dmonitor.o tldmonitor.c date.c tldlist.c
 
 dtldmonitor: tldmonitor.c date.c tldlist.c
 	clang -Wall -Werror -g -o dtldmonitor.o tldmonitor.c date.c tldlist.c
