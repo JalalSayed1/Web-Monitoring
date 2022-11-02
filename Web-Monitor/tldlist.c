@@ -109,7 +109,6 @@ TLDNode *tldlist_addbynode(TLDNode *root, char *hostname) {
     // if root is null (base case):
     if (!root) {
         if ((root = (TLDNode *)malloc(sizeof(TLDNode)))) {
-            printf("root now is null, creating new node for %s\n", hostname);
             root->hostname = hostname;
             root->count = 1;
             root->left = NULL;
@@ -177,7 +176,6 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
         i++;
     }
     lower_hostname[i] = '\0';
-    printf("only_tld after lowering: %s\n", lower_hostname);
 
     int add_status = 0;
 
@@ -254,7 +252,6 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 
 // find the first node in list which iter points to:
 TLDNode *find_first_iter_node(TLDIterator *iter) {
-    printf("finding the first node in list which iter points to\n");
     TLDNode *n = iter->list_root;
 
     // if n has left or right children:

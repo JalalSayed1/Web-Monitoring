@@ -1,6 +1,9 @@
 # Web-Monitoring
 Web monitoring system, developed in C, to count number of visits from different countries using an input log file.
 
+## About the project:
+
+
 ## How to use:
 1. Usage:
 ```
@@ -11,13 +14,13 @@ Web monitoring system, developed in C, to count number of visits from different 
 
 2. To run the program:
 ``` 
-$ Make tldmonitor  
+$ make tldmonitor  
 $ ./tldmonitor 01/01/2000 01/09/2020 <small.txt
 ```
 
 3. To debug:
 ```
-$ Make <name>
+$ make <name>
 $ gdb <name>.o 01/01/2000 01/09/2020 <small.txt
 ```
 > For 'name', can use:
@@ -28,7 +31,7 @@ $ gdb <name>.o 01/01/2000 01/09/2020 <small.txt
 
 4. To run the tests:
 ```
-$ Make <test>
+$ make <test>
 $ ./<test>.o
 ```
 > For 'test', can use:
@@ -37,5 +40,5 @@ $ ./<test>.o
 
 5. To delete all .o files:
 ```
-$ Make clean
+$ make clean
 ```
