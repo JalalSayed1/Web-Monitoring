@@ -9,16 +9,26 @@ Web monitoring system, developed in C, to count number of visits from different 
 ```
 ./program <Begin date> <End date> <input>
 ```
-> Input: If input is empty or '-', it will use the standard input. Otherwise, it will use the input file.
-> Begin and End date: The dates we want to evaluate log file between.
+> Input: If input is empty or '-', it will use the standard input. Otherwise, it will use the input file. E.g. '< small.txt'
+> Begin and End date: The dates we want to evaluate log file between. E.g 01/01/2000 01/09/2020
 
 2. To run the program:
 ``` 
 $ make tldmonitor  
-$ ./tldmonitor 01/01/2000 01/09/2020 <small.txt
+$ ./tldmonitor <Begin date> <End date> <input>
 ```
 
-3. To debug:
+3. To compare results in Linux terminal:
+```
+$ make tldmonitor
+$ ./tldmonitor <Begin date> <End date> <input> | sort -n | diff - <input>.out
+```
+For instance: 
+```
+./tldmonitor 01/01/2000 01/09/2020 <small.txt | sort -n | diff - small.out
+```
+
+4. To debug:
 ```
 $ make <name>
 $ gdb <name>.o 01/01/2000 01/09/2020 <small.txt
