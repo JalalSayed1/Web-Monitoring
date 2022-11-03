@@ -18,8 +18,6 @@ struct tldnode {
     struct tldnode *left;
     struct tldnode *right;
     struct tldnode *parent;
-
-    // struct tldnode *next;
 };
 
 // An iterator is an object that allows you to step through the contents of another object, by providing convenient operations for getting the first element, testing when you are done, and getting the next element if you are not.
@@ -203,10 +201,6 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d) {
             add_status = 1;
         }
     }
-
-    // printf("Finishing an add..\n");
-    // print2D(tld->root);
-    // printf("--------------------------------\n");
 
     return add_status;
 }
