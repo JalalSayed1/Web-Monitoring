@@ -1,5 +1,5 @@
 # Web Monitoring
-- Web monitoring system to count the number of visits from different domains using an input log file.
+- Web monitoring system to count the number of visits from different domain names using an input log file.
 - Using a binary search tree (BST) as the basis of the list.
 - Course work 1 for my Systems Programming COMPSCI4081 course.
 
