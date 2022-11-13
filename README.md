@@ -1,6 +1,7 @@
 # Web Monitoring
 - Web monitoring system to count the number of visits from different domains using an input log file.
 - Using a binary search tree (BST) as the basis of the list.
+- Course work 1 for my Systems Programming COMPSCI4081 course.
 
 ## Requirements:
 - Each Web server routinely logs accesses from other Web servers and browsers. The log is a text file in which each line contains a date and a hostname. Each date is logged in the format dd/mm/yyyy.
